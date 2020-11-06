@@ -17,7 +17,7 @@ from vunit.hashing import hash_string
 from vunit.vhdl_parser import VHDLReference
 from vunit.cached import file_content_hash
 from vunit.parsing.encodings import HDL_FILE_ENCODING
-from vunit.design_unit import DesignUnit, VHDLDesignUnit, Entity, Module
+from vunit.design_unit import DesignUnit, VHDLDesignUnit, Entity, Module, CCppSource
 from vunit.vhdl_standard import VHDLStandard
 from vunit.library import Library
 
@@ -47,6 +47,10 @@ class SourceFile(object):
     @property
     def is_system_verilog(self):
         return self.file_type == "systemverilog"
+
+    @property
+    def is_c_cpp(self):
+        return self.file_type == "C/C++"
 
     @property
     def is_any_verilog(self):
@@ -197,6 +201,38 @@ class VerilogSourceFile(SourceFile):
         """
         assert self.library == library
         library.add_verilog_design_units(self.design_units)
+
+
+class CCppSourceFile(SourceFile):
+    """
+    Represents a C/C++ source file
+    """
+
+    def __init__(  # pylint: disable=too-many-arguments
+        self,
+        file_type,
+        name,
+        library,
+        database,
+        include_dirs=None,
+    ):
+        SourceFile.__init__(self, str(name), library, file_type)
+        self.package_dependencies = []
+        self.module_dependencies = []
+        self.include_dirs = include_dirs if include_dirs is not None else []
+        self._content_hash = file_content_hash(
+            self.name, encoding=HDL_FILE_ENCODING, database=database
+        )
+
+        for path in self.include_dirs:
+            self._content_hash = hash_string(self._content_hash + hash_string(path))
+
+    def add_to_library(self, library):
+        """
+        Add design units to the library
+        """
+        assert self.library == library
+        library.add_c_cpp_design_units(self.design_units)
 
 
 class VHDLSourceFile(SourceFile):
@@ -360,8 +396,10 @@ class VHDLSourceFile(SourceFile):
 VHDL_EXTENSIONS = (".vhd", ".vhdl", ".vho")
 VERILOG_EXTENSIONS = (".v", ".vp", ".vams", ".vo")
 SYSTEM_VERILOG_EXTENSIONS = (".sv",)
+C_CPP_EXTENSIONS = (".c", ".cpp", ".h")
 VERILOG_FILE_TYPES = ("verilog", "systemverilog")
-FILE_TYPES = ("vhdl",) + VERILOG_FILE_TYPES
+C_CPP_FILE_TYPES = ("C/C++",)
+FILE_TYPES = ("vhdl",) + VERILOG_FILE_TYPES + C_CPP_FILE_TYPES
 
 
 def file_type_of(file_name):
@@ -378,4 +416,8 @@ def file_type_of(file_name):
     if ext.lower() in SYSTEM_VERILOG_EXTENSIONS:
         return "systemverilog"
 
+    if ext.lower() in C_CPP_EXTENSIONS:
+        return "C/C++"
+
     raise RuntimeError("Unknown file ending '%s' of %s" % (ext, file_name))
+

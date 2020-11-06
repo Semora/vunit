@@ -41,6 +41,10 @@ class DesignUnit(object):
     def is_module(self):
         return False
 
+    @property
+    def is_c_cpp_source(self):
+        return False
+
 
 class VHDLDesignUnit(DesignUnit):
     """
@@ -107,4 +111,18 @@ class Module(DesignUnit):
 
     @property
     def is_module(self):
+        return True
+
+
+class CCppSource(DesignUnit):
+    """
+    Represents a Verilog Module
+    """
+
+    def __init__(self, name, source_file, generic_names=None):
+        DesignUnit.__init__(self, name, source_file, "c_cpp_source")
+        self.generic_names = [] if generic_names is None else generic_names
+
+    @property
+    def is_c_cpp_source(self):
         return True

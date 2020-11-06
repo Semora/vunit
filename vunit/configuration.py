@@ -107,11 +107,19 @@ class Configuration(object):  # pylint: disable=too-many-instance-attributes
         Set generic
         """
         if name not in self._design_unit.generic_names:
+            unit_type = "unknown"
+            if self._design_unit.is_entity:
+                unit_type = "entity"
+            elif self._design_unit.is_module:
+                unit_type = "module"
+            elif self._design_unit.is_c_cpp_source:
+                unit_type = "c_cpp_source"
+
             LOGGER.warning(
                 "Generic '%s' set to value '%s' not found in %s '%s.%s'. Possible values are [%s]",
                 name,
                 value,
-                "entity" if self._design_unit.is_entity else "module",
+                unit_type,
                 self._design_unit.library_name,
                 self._design_unit.name,
                 ", ".join("%s" % gname for gname in self._design_unit.generic_names),

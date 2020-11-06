@@ -21,9 +21,11 @@ from vunit.exceptions import CompileError
 from vunit import ostools
 from vunit.source_file import (
     VERILOG_FILE_TYPES,
+    C_CPP_FILE_TYPES,
     SourceFile,
     VerilogSourceFile,
     VHDLSourceFile,
+    CCppSourceFile,
 )
 from vunit.vhdl_standard import VHDL, VHDLStandard
 from vunit.library import Library
@@ -153,6 +155,14 @@ class Project(object):  # pylint: disable=too-many-instance-attributes
                 include_dirs=include_dirs,
                 defines=defines,
                 no_parse=no_parse,
+            )
+        elif file_type in C_CPP_FILE_TYPES:
+            source_file = CCppSourceFile(
+                file_type,
+                fname,
+                library,
+                database=self._database,
+                include_dirs=include_dirs,
             )
         else:
             raise ValueError(file_type)

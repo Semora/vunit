@@ -46,6 +46,9 @@ class Library(object):  # pylint: disable=too-many-instance-attributes
         self.modules = {}  # type: ignore
         self.verilog_packages = {}  # type: ignore
 
+        # C/C++ specific
+        self.c_cpp_sources = {}  # type: ignore
+
         self._is_external = is_external
 
     def add_source_file(self, source_file):
@@ -181,6 +184,18 @@ class Library(object):  # pylint: disable=too-many-instance-attributes
                     )
                 self.verilog_packages[design_unit.name] = design_unit
 
+    def add_c_cpp_design_units(self, design_units):
+        """
+        Add C/C++ design units to the library
+        """
+        for design_unit in design_units:
+            if design_unit.unit_type == "c_cpp_source":
+                if design_unit.name in self.c_cpp_sources:
+                    self._warning_on_duplication(
+                        design_unit, self.c_cpp_sources[design_unit.name].source_file.name
+                    )
+                self.c_cpp_sources[design_unit.name] = design_unit
+
     def get_entities(self):
         """
         Return a list of all entites in the design with their generic names and architecture names
@@ -195,6 +210,12 @@ class Library(object):  # pylint: disable=too-many-instance-attributes
         Return a list of all modules in the design
         """
         return list(self.modules.values())
+        
+    def get_c_cpp_sources(self):
+        """
+        Return a list of all C/C++ files
+        """
+        return list(self.c_cpp_sources.values())
 
     def get_package_body(self, name):
         return self._package_bodies[name]

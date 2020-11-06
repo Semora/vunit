@@ -145,6 +145,10 @@ class ModelSimInterface(
         if source_file.is_any_verilog:
             return self.compile_verilog_file_command(source_file)
 
+        if source_file.is_c_cpp:
+            return self.compile_c_cpp_file_command(source_file)
+
+
         LOGGER.error("Unknown file type: %s", source_file.file_type)
         raise CompileError
 
@@ -199,6 +203,29 @@ class ModelSimInterface(
             args += ["+incdir+%s" % include_dir]
         for key, value in source_file.defines.items():
             args += ["+define+%s=%s" % (key, value)]
+        return args
+
+    def compile_c_cpp_file_command(self, source_file):
+        """
+        Returns the command to compile a C/C++ file
+        """
+        args = [
+            str(Path(self._prefix) / "vlog"),
+            "-quiet",
+            "-modelsimini",
+            self._sim_cfg_file_name,
+        ]
+        # if source_file.is_system_verilog:
+        #     args += ["-sv"]
+        # args += source_file.compile_options.get("modelsim.vlog_flags", [])
+        args += ["-work", source_file.library.name, source_file.name]
+
+        for library in self._libraries:
+            args += ["-L", library.name]
+        for include_dir in source_file.include_dirs:
+            args += ["+incdir+%s" % include_dir]
+        # for key, value in source_file.defines.items():
+        #     args += ["+define+%s=%s" % (key, value)]
         return args
 
     def create_library(self, library_name, path, mapped_libraries=None):
