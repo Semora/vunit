@@ -118,6 +118,7 @@ class Project(object):  # pylint: disable=too-many-instance-attributes
         file_type="vhdl",
         include_dirs=None,
         defines=None,
+        ccflags=None,
         vhdl_standard: Optional[VHDLStandard] = None,
         no_parse=False,
     ):
@@ -163,6 +164,7 @@ class Project(object):  # pylint: disable=too-many-instance-attributes
                 library,
                 database=self._database,
                 include_dirs=include_dirs,
+                ccflags=ccflags,
             )
         else:
             raise ValueError(file_type)

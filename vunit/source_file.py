@@ -215,11 +215,13 @@ class CCppSourceFile(SourceFile):
         library,
         database,
         include_dirs=None,
+        ccflags=None,
     ):
         SourceFile.__init__(self, str(name), library, file_type)
         self.package_dependencies = []
         self.module_dependencies = []
         self.include_dirs = include_dirs if include_dirs is not None else []
+        self.ccflags = ccflags
         self._content_hash = file_content_hash(
             self.name, encoding=HDL_FILE_ENCODING, database=database
         )

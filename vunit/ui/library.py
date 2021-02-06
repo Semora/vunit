@@ -161,6 +161,7 @@ class Library(object):
         preprocessors=None,
         include_dirs=None,
         defines=None,
+        ccflags=None,
         allow_empty=False,
         vhdl_standard: Optional[str] = None,
         no_parse=False,
@@ -172,6 +173,7 @@ class Library(object):
         :param pattern: A wildcard pattern match the files to add
         :param include_dirs: A list of include directories
         :param defines: A dictionary containing Verilog defines to be set
+        :param ccflags: A string of C/C++ compiler options
         :param allow_empty: To disable an error if no files matched the pattern
         :param vhdl_standard: The VHDL standard used to compile files, if None library default is used
         :param no_parse: Do not parse file(s) for dependency or test scanning purposes
@@ -193,6 +195,7 @@ class Library(object):
                     preprocessors,
                     include_dirs,
                     defines,
+                    ccflags,
                     vhdl_standard,
                     no_parse=no_parse,
                     file_type=file_type,
@@ -207,6 +210,7 @@ class Library(object):
         preprocessors=None,
         include_dirs=None,
         defines=None,
+        ccflags=None,
         vhdl_standard: Optional[str] = None,
         no_parse=False,
         file_type=None,
@@ -217,6 +221,7 @@ class Library(object):
         :param file_name: The name of the file
         :param include_dirs: A list of include directories
         :param defines: A dictionary containing Verilog defines to be set
+        :param ccflags: A string of C/C++ compiler options
         :param vhdl_standard: The VHDL standard used to compile this file, if None library default is used
         :param no_parse: Do not parse file for dependency or test scanning purposes
         :param file_type: The type of the file; ``"vhdl"``, ``"verilog"``  or ``"systemverilog"``.
@@ -251,6 +256,7 @@ class Library(object):
             file_type=file_type,
             include_dirs=include_dirs,
             defines=defines,
+            ccflags=ccflags,
             vhdl_standard=self._which_vhdl_standard(vhdl_standard),
             no_parse=no_parse,
         )

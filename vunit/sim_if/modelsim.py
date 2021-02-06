@@ -226,6 +226,8 @@ class ModelSimInterface(
             args += ["+incdir+%s" % include_dir]
         # for key, value in source_file.defines.items():
         #     args += ["+define+%s=%s" % (key, value)]
+        if source_file.ccflags:
+            args += ["-ccflags", '"%s"' % (source_file.ccflags, )]
         return args
 
     def create_library(self, library_name, path, mapped_libraries=None):
