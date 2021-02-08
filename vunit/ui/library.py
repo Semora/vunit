@@ -173,7 +173,7 @@ class Library(object):
         :param pattern: A wildcard pattern match the files to add
         :param include_dirs: A list of include directories
         :param defines: A dictionary containing Verilog defines to be set
-        :param ccflags: A string of C/C++ compiler options
+        :param ccflags: A List of C/C++ compiler options
         :param allow_empty: To disable an error if no files matched the pattern
         :param vhdl_standard: The VHDL standard used to compile files, if None library default is used
         :param no_parse: Do not parse file(s) for dependency or test scanning purposes
@@ -221,7 +221,7 @@ class Library(object):
         :param file_name: The name of the file
         :param include_dirs: A list of include directories
         :param defines: A dictionary containing Verilog defines to be set
-        :param ccflags: A string of C/C++ compiler options
+        :param ccflags: A List of C/C++ compiler options
         :param vhdl_standard: The VHDL standard used to compile this file, if None library default is used
         :param no_parse: Do not parse file for dependency or test scanning purposes
         :param file_type: The type of the file; ``"vhdl"``, ``"verilog"``  or ``"systemverilog"``.

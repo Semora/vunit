@@ -221,7 +221,7 @@ class CCppSourceFile(SourceFile):
         self.package_dependencies = []
         self.module_dependencies = []
         self.include_dirs = include_dirs if include_dirs is not None else []
-        self.ccflags = ccflags
+        self.ccflags = ccflags if ccflags is not None else []
         self._content_hash = file_content_hash(
             self.name, encoding=HDL_FILE_ENCODING, database=database
         )
